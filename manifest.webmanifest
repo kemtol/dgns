@@ -1,7 +1,7 @@
 {
   "name": "Diagnos",
   "short_name": "Diagnos",
-  "start_url": "./#onb-welcome",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#e6f3ee",
   "theme_color": "#0e5e55",

@@ -1,568 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0e5e55">
-<title>Diagnos</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="theme-color" content="#0e5e55" />
+	<title>Diagnos</title>
 
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" sizes="192x192" href="./icons/icon-192.png">
+	<!-- PWA -->
+	<link rel="manifest" href="./manifest.webmanifest" />
+	<link rel="icon" sizes="192x192" href="./icons/icon-192.png" />
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap & jQuery -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<style>
-  :root{--bg:#e6f3ee;--brand:#0e5e55}
-  body{background:var(--bg);color:#0e2a26}
-
-  /* ========== Splash ========== */
-  #onb-splash{
-  position:fixed; inset:0; z-index:9999;
-  display:grid; place-items:center; text-align:center;
-  color:#fff; padding:24px;
-  /* Gradient hijau + glow logo */
-  background:
-    radial-gradient(240px 160px at 50% 32%, rgba(255,255,255,.18), rgba(255,255,255,0) 60%),
-    radial-gradient(1200px 800px at 10% 10%, rgba(255,255,255,.08), rgba(255,255,255,0) 50%),
-    linear-gradient(155deg, #25d0a6 0%, #0fb18c 38%, #0e5e55 100%);
-  }
-  #onb-splash .splash-mark{
-  width:82px; height:82px; border-radius:20px;
-  display:inline-grid; place-items:center;
-  background:rgba(255,255,255,.14);
-  backdrop-filter: blur(2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,.18);
-  }
-  #onb-splash .splash-mark img{ width:56px; height:56px; object-fit:contain; }
-  #onb-splash .brand-title{ font-weight:700; letter-spacing:.3px; }
-  #onb-splash .brand-sub{ opacity:.9 }
-  #onb-splash .spinner-border{ margin-top:18px }
-
-  .splash-hide{ animation:splashOut .36s ease forwards }
-  @keyframes splashOut{ to{ opacity:0; visibility:hidden } }
-
-
-  .app{max-width:420px;margin:auto;min-height:100dvh;display:flex;flex-direction:column}
-  .card-soft{background:#cfe7df;border:none;border-radius:14px}
-  .hidden{display:none !important}
-  .nav-bottom{position:sticky;bottom:0;z-index:10}
-  section.page{padding:12px 16px}
-  .step-dot{width:8px;height:8px;border-radius:50%;background:#bcd7cf}
-  .step-dot.active{background:var(--brand)}
-
-  /* === UI ENHANCEMENT: type scale, spacing, sizing (mobile) === */
-:root{
-  /* palette helpers (keep your existing colors) */
-  --ink-900:#0B1220; --ink-600:#475569;
-  --divider:#E2E8F0;
-
-  /* radii & spacing */
-  --radius-lg:16px; --radius-md:12px;
-  --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
-
-  /* type scale (base 16px) */
-  --fs-title:1.75rem;     /* 28px – section/page hero */
-  --fs-subtitle:1.0625rem;/* 17px – subheading */
-  --fs-body:0.9375rem;    /* 15px – body default */
-  --fs-caption:0.8125rem; /* 13px – small */
-  --fs-price:1.5rem;      /* 24px – large price */
-
-  /* buttons */
-  --btn-h:56px; --btn-r:14px;
-}
-
-/* Canvas & sections */
-body{ font-size:var(--fs-body); }
-section.page{ padding:16px 20px !important; }
-section.page > section{ margin-bottom:var(--space-5); }
-
-/* Header = white, compact, sticky */
-#appHeader{
-  position:sticky; top:0; z-index:20;
-  background:#fff; border-bottom:1px solid var(--divider);
-  padding:16px 20px !important;
-}
-#appHeader .small{ font-size:var(--fs-caption); }
-#appHeader .d-flex>div .small:last-child{ color:var(--ink-600); font-size:var(--fs-body); }
-
-/* Cards */
-.card-soft{
-  background:#E6F4F2; border:none;
-  border-radius:var(--radius-lg) !important;
-}
-.card-soft .fw-semibold{ font-size:1.0625rem; letter-spacing:.1px; }
-.card-soft .small{ font-size:var(--fs-caption); }
-
-/* Badges / chips */
-.badge{ border-radius:999px; padding:.4rem .6rem; font-weight:600; }
-.badge.text-bg-light.text-success{ background:#FFFBEB; color:#F59E0B; } /* “Promo” amber */
-
-/* Buttons (keep Bootstrap classes, just enhance) */
-.btn{ border-radius:var(--btn-r); font-weight:700; letter-spacing:.2px; }
-.btn.btn-success{
-  height:var(--btn-h); padding:0 18px; border:none;
-  background:linear-gradient(90deg,#0F766E,#14B8A6);
-  box-shadow:0 4px 14px rgba(15,118,110,.18);
-}
-.btn.btn-success:active{ transform:translateY(1px); }
-.btn.btn-outline-success{
-  height:var(--btn-h); padding:0 18px;
-  border-width:1.5px; border-color:#0F766E; color:#0F766E; background:#F6FFFD;
-}
-.btn.btn-sm{ height:40px; border-radius:12px; padding:0 12px; }
-
-/* Section headings */
-#home h6.fw-bold{ font-size:1.125rem; letter-spacing:.1px; margin-bottom:.75rem; }
-
-/* Price presentation */
-#home strong{ font-size:var(--fs-price); font-weight:800; color:var(--ink-900); line-height:1.2; }
-#home .text-decoration-line-through{ color:var(--ink-600); }
-
-/* Quick actions (keep 1 tone background; rounded & roomy) */
-#home .row.g-2 > [class^="col"] .btn{
-  background:#F0F9FF; border:1px solid #D6E9F8; color:#0E6E66;
-  border-radius:var(--radius-lg); padding:14px 8px;
-}
-#home .row.g-2 > [class^="col"] .btn .small{ font-size:var(--fs-caption); }
-
-/* Bottom navigation: white like the mock, teal icons */
-#bottomNav{
-  background:#fff !important; border-top:1px solid var(--divider);
-  box-shadow:0 -6px 20px rgba(19,41,33,.04);
-}
-#bottomNav .nav-link{ color:#0E6E66 !important; opacity:.82; }
-#bottomNav .nav-link.active{ opacity:1; }
-
-</style>
+	<!-- App CSS & JS -->
+	<link rel="stylesheet" href="./style.css" />
+	<script defer src="./app.js"></script>
 </head>
+
 <body>
-<div class="app">
+	<div class="app">
 
-  <!-- Header: hanya tampil di app (bukan onboarding) -->
-  <header id="appHeader" class="p-3 d-none">
-    <div class="d-flex align-items-center gap-2">
-      <div class="rounded-circle bg-success text-white fw-bold d-grid" style="width:32px;height:32px;place-items:center">D</div>
-      <div>
-        <div class="small text-muted">Halo, <span id="userName">Guest</span></div>
-        <div class="small">Rekomendasi Sehat Anda</div>
-      </div>
-      <button id="installBtn" class="btn btn-success btn-sm ms-auto d-none">Pasang App</button>
-    </div>
-  </header>
+		<!-- Header (muncul setelah onboarding) -->
+		<header class="p-3 d-none" id="appHeader">
+			<div class="d-flex align-items-center gap-2">
+				<div class="rounded-circle bg-success text-white fw-bold d-grid"
+					style="background-color: transparent !important;width:32px;height:32px;place-items:center">
+					<span style="font-size: 1.5rem;">👋</span>
+				</div>
+				<div>
+					<div class="small text-muted">Halo, <span id="userName">Sahabat</span></div>
+					<div class="small fw-bold">Rekomendasi Sehat Anda</div>
+				</div>
+				<button class="btn btn-success btn-sm ms-auto d-none" id="installBtn">Pasang App</button>
+			</div>
+		</header>
 
-  <!-- ===================== PAGES (SECTIONS) ===================== -->
+		<!-- ===================== PAGES ===================== -->
 
-<!-- Onboarding: Splash -->
-<section id="onb-splash" class="page">
-  <div>
-    <div class="splash-mark mx-auto mb-3">
-      <!-- Ganti src di bawah dengan logo Diagnos kamu jika ada -->
-      <img src="./icons/icon-192.png" alt="Diagnos">
-    </div>
-    <div class="brand-title">Diagnos</div>
-    <div class="small brand-sub">Clinical Laboratory</div>
-    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-  </div>
-</section>
+		<!-- Splash (overlay) -->
+		<section id="onb-splash" class="page d-flex justify-content-center align-items-center min-vh-100">
+			<div class="splash-inner text-center">
+				<div class="splash-mark">
+					<!-- Logo -->
+					<img alt="Diagnos" class="logo"
+						src="data:image/jpeg;base64,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" />
+				</div>
+				<div class="brand-title">Diagnos</div>
+				<div class="brand-sub">Clinical Laboratory</div>
+				<div aria-hidden="true" class="spinner mx-auto mt-4"></div>
+			</div>
+		</section>
 
+		<!-- Onboarding: Welcome -->
+		<section class="page hidden" id="onb-welcome">
+			<div class="text-center mb-3">
+				<img alt="Diagnos" class="logo w-50"
+					src="data:image/jpeg;base64,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" />
+				<div class="small text-muted">Kelola pemeriksaan & aksi sehat Anda.</div>
+			</div>
 
-  <!-- Onboarding: Welcome -->
-  <section id="onb-welcome" class="page">
-    <div class="text-center mb-3">
-      <div class="rounded-circle bg-success text-white fw-bold d-inline-grid" style="width:56px;height:56px;place-items:center">D</div>
-      <h5 class="mt-2">Selamat Datang di Diagnos</h5>
-      <div class="small text-muted">Kelola pemeriksaan & aksi sehat Anda.</div>
-    </div>
-    <div class="card card-soft p-3 mb-3">
-      <div class="fw-semibold">Apa saja fiturnya?</div>
-      <ul class="small text-muted mb-0">
-        <li>Rekomendasi MCU & pemesanan</li>
-        <li>Home Care & pengingat jadwal</li>
-        <li>Simpan hasil & tips kesehatan</li>
-      </ul>
-    </div>
-    <div class="d-flex justify-content-center gap-2 my-3">
-      <div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
-    </div>
-    <div class="d-grid gap-2">
-      <button class="btn btn-success" data-go="onb-perms">Lanjut</button>
-      <button class="btn btn-outline-success" data-skip>Lewati (Guest)</button>
-    </div>
-  </section>
+			<div class="p-3 mb-3">
+				<ul class="list-inline text-center">
+					<li class="list-inline-item">
+						<span class="badge bg-primary">Rekomendasi</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-success">pemesanan</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-primary">MCU</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-warning text-dark">Home Care</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-primary">pengingat jadwal</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-warning text-dark">Simpan hasil</span>
+					</li>
+					<li class="list-inline-item">
+						<span class="badge bg-success">tips kesehatan</span>
+					</li>
+				</ul>
 
-  <!-- Onboarding: Permissions -->
-  <section id="onb-perms" class="page hidden">
-    <h5 class="mb-2">Izin & Persetujuan</h5>
-    <div class="card card-soft p-3 mb-3">
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" id="permNotif">
-        <label class="form-check-label small" for="permNotif">Izinkan notifikasi pengingat jadwal</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="permLoc">
-        <label class="form-check-label small" for="permLoc">Gunakan lokasi saat memesan Home Care</label>
-      </div>
-      <div class="small text-muted mt-2">Bisa diubah nanti di Akun.</div>
-    </div>
-    <div class="d-flex justify-content-center gap-2 my-3">
-      <div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div>
-    </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-success" data-go="onb-welcome">Kembali</button>
-      <button class="btn btn-success ms-auto" data-go="onb-details">Lanjut</button>
-    </div>
-  </section>
+			</div>
 
-  <!-- Onboarding: Create Account -->
-  <section id="onb-details" class="page hidden">
-    <h5 class="mb-2">Buat Akun</h5>
-    <div class="small text-muted mb-3">
-      Data: NIK, Nama, Gender & Tgl Lahir, Email & Phone, Alamat. <em>NIK belum diverifikasi di tahap ini.</em>
-    </div>
+			<div class="d-grid gap-2 mt-3">
+				<button class="btn btn-success" data-go="onb-details">Mulai</button>
+				<button class="btn btn-outline-success" data-go="home">Lewati</button>
+			</div>
+		</section>
 
-    <!-- Nonaktifkan validasi native browser -->
-    <form id="formOnb" class="card card-soft p-3" novalidate>
-      <div class="mb-2">
-        <label class="form-label small">NIK</label>
-        <!-- required, maxlength, pattern dihapus -->
-        <input class="form-control" name="nik" placeholder="16 digit">
-      </div>
+		<!-- Onboarding: Details -->
+		<section class="page hidden" id="onb-details">
+				<img alt="Diagnos" class="logo w-25" src="data:image/jpeg;base64,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" />			<form id="formOnb" class="vstack gap-3">
+				<hr style="color: forestgreen;">
+				<div>
+					<label class="form-label fw-bold">Nama Lengkap</label>
+					<input name="name" class="form-control" required placeholder="Nama Anda" />
+				</div>
+				<div>
+					<label class="form-label fw-bold">NIK</label>
+					<input name="nik" class="form-control" required pattern="\\d{8,20}"
+						placeholder="Nomor Induk Kependudukan" />
+				</div>
+				<div>
+					<label class="form-label fw-bold">No. HP</label>
+					<input name="phone" class="form-control" required placeholder="08xxxxxxxxxx" />
+				</div>
+				<hr style="color: forestgreen;">
+				<div class="d-grid gap-2 mt-2">
+					<button type="submit" class="btn btn-success">Daftarkan</button>
+					<button type="button" class="btn btn-outline-success" data-go="onb-welcome">Kembali</button>
+				</div>
+			</form>
+		</section>
 
-      <div class="mb-2">
-        <label class="form-label small">Nama</label>
-        <!-- required dihapus -->
-        <input class="form-control" name="name">
-      </div>
+		<!-- Onboarding: Success -->
+		<section class="page page-center text-center" id="onb-success">
+			<div class="w-100" style="max-width: 360px; margin-inline:auto;">
+				<img alt="Diagnos" class="logo w-25" src="data:image/jpeg;base64,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" />			<form id="formOnb" class="vstack gap-3">
+				<hr style="color: forestgreen;">
+				<h5 class="fw-bold">Akun Berhasil Dibuat</h5>
+				<div class="table-responsive">
+					<table class="table table-bordered table-sm mb-4">
+						<tbody>
+							<tr>
+								<th scope="row" class="text-start" style="background: aliceblue;">ID Pasien</th>
+								<td id="successPatientId" class="text-start">-</td>
+							</tr>
+							<tr>
+								<th scope="row" class="text-start" style="background: aliceblue;">Status NIK</th>
+								<td id="successNikStatus" class="text-start">Belum Verifikasi</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
-      <div class="row g-2">
-        <div class="col-6">
-          <label class="form-label small">Gender</label>
-          <select class="form-select" name="gender">
-            <option value="M">Pria</option>
-            <option value="F">Wanita</option>
-          </select>
-        </div>
-        <div class="col-6">
-          <label class="form-label small">Tanggal Lahir</label>
-          <!-- tetap type="date" untuk date picker; tidak divalidasi karena novalidate -->
-          <input type="date" class="form-control" name="dob">
-        </div>
-      </div>
-
-      <div class="row g-2 mt-1">
-        <div class="col-6">
-          <label class="form-label small">Email</label>
-          <!-- tetap type="email" untuk keyboard/auto-fill; tidak divalidasi karena novalidate -->
-          <input type="email" class="form-control" name="email">
-        </div>
-        <div class="col-6">
-          <label class="form-label small">Phone</label>
-          <!-- tetap type="tel" untuk keyboard numerik; tidak divalidasi karena novalidate -->
-          <input type="tel" class="form-control" name="phone" placeholder="08xxxxxxxxxx">
-        </div>
-      </div>
-
-      <div class="mt-2">
-        <label class="form-label small">Alamat</label>
-        <textarea rows="2" class="form-control" name="address"></textarea>
-      </div>
-
-      <div class="d-flex gap-2 mt-3">
-        <button class="btn btn-outline-success" data-go="onb-perms" type="button">Kembali</button>
-        <button class="btn btn-success ms-auto" type="submit">Daftarkan</button>
-      </div>
-    </form>
-
-    <div class="d-flex justify-content-center gap-2 my-3">
-      <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div>
-    </div>
-  </section>
-
-
-  <!-- Onboarding: Success -->
-  <section id="onb-success" class="page hidden text-center">
-    <div class="rounded-circle bg-success text-white fw-bold d-inline-grid" style="width:56px;height:56px;place-items:center">✓</div>
-    <h5 class="mt-3">Akun Dibuat</h5>
-    <div class="small text-muted" id="successInfo"></div>
-    <div class="d-grid gap-2 mt-4">
-      <button class="btn btn-success" data-go="home">Masuk ke Beranda</button>
-    </div>
-  </section>
-
-  <!-- HOME -->
-  <section id="home" class="page hidden">
-    <section class="mb-3">
-      <div class="card card-soft p-3 mb-2">
-        <div class="badge text-bg-light text-success mb-1">PROMOCARE</div>
-        <div class="fw-semibold">MEDICAL CHECK UP SILVER</div>
-        <ul class="small text-muted mb-2"><li>Profil darah, gula, kolesterol, Asam Urat</li></ul>
-        <div class="d-flex align-items-center gap-2">
-          <span class="text-decoration-line-through small text-muted">Rp 980.000</span>
-          <strong>Rp 393.000</strong>
-          <button class="btn btn-success btn-sm ms-auto" data-action="order">Ambil</button>
-        </div>
-      </div>
-      <div class="card card-soft p-3">
-        <div class="badge text-bg-light text-success mb-1">PROMOCARE</div>
-        <div class="fw-semibold">MEDICAL CHECK UP PLATINUM</div>
-        <ul class="small text-muted mb-2"><li>Profil darah, gula, kolesterol, fungsi organ</li></ul>
-        <div class="d-flex align-items-center gap-2">
-          <span class="text-decoration-line-through small text-muted">Rp 1.290.000</span>
-          <strong>Rp 460.000</strong>
-          <button class="btn btn-success btn-sm ms-auto" data-action="order">Ambil</button>
-        </div>
-      </div>
-      <div class="text-end small text-muted mt-1">... lainnya &raquo;</div>
-    </section>
-
-    <section class="mb-3">
-      <h6 class="fw-bold mb-2">Aksi Sehat</h6>
-      <div class="row g-2">
-        <div class="col-3"><a class="btn btn-light w-100 py-3" data-go="layanan">🗓️<br><span class="small">Jadwal</span></a></div>
-        <div class="col-3"><a class="btn btn-light w-100 py-3" data-go="riwayat">📄<br><span class="small">Hasil</span></a></div>
-        <div class="col-3"><a class="btn btn-light w-100 py-3" data-go="layanan">🏥<br><span class="small">Home Care</span></a></div>
-        <div class="col-3"><a class="btn btn-light w-100 py-3" data-go="layanan">ℹ️<br><span class="small">Program</span></a></div>
-      </div>
-    </section>
-
-    <section>
-      <h6 class="fw-bold mb-2">Tips Kesehatan</h6>
-      <div class="card card-soft p-3">
-        <strong>DIET TEPAT USIA EMAS</strong>
-        <div class="small text-muted">Program asupan usia matang.</div>
-      </div>
-    </section>
-  </section>
-
-  <!-- RIWAYAT -->
-  <section id="riwayat" class="page hidden">
-    <h6 class="fw-bold mb-2">Riwayat Pemeriksaan</h6>
-    <div class="card card-soft p-3 mb-2">
-      <div class="fw-semibold">MCU Silver - 02 Agu 2025</div>
-      <div class="small text-muted mb-2">Ringkasan: Normal, cek ulang 6 bulan.</div>
-      <button class="btn btn-success btn-sm" data-action="lihat-hasil">Lihat Hasil</button>
-    </div>
-    <div class="small text-muted">Belum ada data lain.</div>
-  </section>
-
-  <!-- LAYANAN -->
-  <section id="layanan" class="page hidden">
-    <h6 class="fw-bold mb-2">Layanan</h6>
-    <div class="card card-soft p-3 mb-2">
-      <div class="fw-semibold">Booking Jadwal</div>
-      <div class="small text-muted mb-2">Pilih cabang & tanggal.</div>
-      <button class="btn btn-success btn-sm" data-action="booking">Mulai</button>
-    </div>
-    <div class="card card-soft p-3">
-      <div class="fw-semibold">Home Care</div>
-      <div class="small text-muted mb-2">Kunjungan petugas ke lokasi Anda.</div>
-      <button class="btn btn-success btn-sm" data-action="homecare">Ajukan</button>
-    </div>
-  </section>
-
-  <!-- AKUN -->
-  <section id="akun" class="page hidden">
-    <h6 class="fw-bold mb-2">Akun</h6>
-    <div class="card card-soft p-3 mb-2">
-      <div class="d-flex align-items-center gap-2">
-        <div class="rounded-circle bg-success text-white d-grid" style="width:42px;height:42px;place-items:center">👤</div>
-        <div>
-          <div class="fw-semibold" id="akunName">Guest</div>
-          <div class="small text-muted" id="akunMeta"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card card-soft p-3 mb-2">
-      <div class="fw-semibold mb-1">Pasien</div>
-      <div class="small text-muted">ID Pasien: <span id="akunPid">-</span></div>
-      <div class="small">Status NIK: <strong id="akunNikStatus">Belum Verifikasi</strong></div>
-      <button class="btn btn-outline-success btn-sm mt-2" data-action="verify-nik">Verify NIK (mock)</button>
-    </div>
-
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="notif">
-      <label class="form-check-label small" for="notif">Aktifkan notifikasi</label>
-    </div>
-
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-success btn-sm" data-go="onb-details">Ubah Profil</button>
-      <button class="btn btn-danger btn-sm ms-auto" data-action="logout">Logout</button>
-    </div>
-  </section>
-
-  <!-- ===================== /PAGES ===================== -->
-
-  <!-- Bottom Nav -->
-  <nav id="bottomNav" class="navbar navbar-dark bg-success nav-bottom d-none">
-    <div class="container-fluid justify-content-around">
-      <a class="nav-link text-white small" data-go="home">🏠<br>Home</a>
-      <a class="nav-link text-white small" data-go="riwayat">🗂️<br>Riwayat</a>
-      <a class="nav-link text-white small" data-go="layanan">🧪<br>Layanan</a>
-      <a class="nav-link text-white small" data-go="akun">👤<br>Akun</a>
-    </div>
-  </nav>
-</div>
-
-<script>
-/* ======== STATE ======== */
-const state = {
-  onboarded: JSON.parse(localStorage.getItem('onboarded') || 'false'),
-  user: JSON.parse(localStorage.getItem('user') || '{}'), // {nik,name,gender,dob,email,phone,address,patientId,nikVerified}
-  notif: JSON.parse(localStorage.getItem('notif') || 'false')
-};
-const save = () => localStorage.setItem('user', JSON.stringify(state.user));
-
-/* ======== SECTION ROUTER (show/hide) ======== */
-function showChrome(show){ // header + bottom nav
-  $('#appHeader').toggleClass('d-none', !show);
-  $('#bottomNav').toggleClass('d-none', !show);
-}
-function showSection(id){
-  $('section.page').addClass('hidden');
-  $('#'+id).removeClass('hidden');
-
-  const onboarding = id.startsWith('onb-');
-  showChrome(!onboarding);
-
-  // refresh header & akun info
-  $('#userName').text(state.user?.name || 'Guest');
-  $('#notif').prop('checked', !!state.notif);
-  $('#akunName').text(state.user?.name || 'Guest');
-  const meta = (state.user?.dob ? calcAge(state.user.dob)+' • ' : '') + (state.user?.gender==='M'?'Pria':state.user?.gender==='F'?'Wanita':'');
-  $('#akunMeta').text(meta);
-  $('#akunPid').text(state.user?.patientId || '-');
-  $('#akunNikStatus').text(state.user?.nikVerified ? 'Terverifikasi' : 'Belum Verifikasi');
-}
-
-const startPage = state.onboarded ? 'home' : 'onb-splash';
-showSection(startPage);
-
-// Auto-transition dari Splash -> Welcome
-if (!state.onboarded) {
-  setTimeout(() => {
-    // kalau user belum pindah manual, pakai router (hash) biar masuk history
-    if (!location.hash || location.hash === '#onb-splash') {
-      window.location.hash = 'onb-welcome';
-    }
-    // animasi fade-out opsional
-    $('#onb-splash').addClass('splash-hide');
-  }, 1200); // durasi tampil splash (ms)
-}
-
-
-/* ======== NAV HANDLERS (versi dengan history) ======== */
-$(document).on('click','[data-go]', function(){
-  const target = $(this).data('go');
-  if (window.location.hash.replace('#','') !== target) {
-    window.location.hash = target; // biar masuk ke history
-  }
-});
-
-// Handle tombol back/forward di browser atau device
-$(window).on('hashchange', ()=>{
-  const id = location.hash.replace('#','');
-  if (id) {
-    showSection(id);
-  } else {
-    // fallback jika hash kosong
-    showSection(state.onboarded ? 'home' : 'onb-welcome');
-  }
-});
-
-
-/* ======== ONBOARDING LOGIC ======== */
-$(document).on('click','[data-skip]', ()=>{
-  state.onboarded = true; localStorage.setItem('onboarded','true');
-  showSection('home');
-});
-$('#permNotif').on('change', function(){
-  state.notif = $(this).is(':checked'); localStorage.setItem('notif', JSON.stringify(state.notif));
-  if (state.notif && 'Notification' in window) Notification.requestPermission();
-});
-$('#permLoc').on('change', function(){
-  if($(this).is(':checked') && navigator.geolocation){ navigator.geolocation.getCurrentPosition(()=>{},()=>{}); }
-});
-$('#formOnb').on('submit', function(e){
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this).entries());
-  state.user = {...state.user, ...data, nikVerified:false, patientId: genPid()};
-  localStorage.setItem('onboarded','true'); state.onboarded = true; save();
-  $('#successInfo').html(`ID Pasien: <strong>${state.user.patientId}</strong>. Status NIK: <strong>Belum Verifikasi</strong>.`);
-  showSection('onb-success');
-});
-
-/* ======== APP ACTIONS ======== */
-$(document).on('change','#notif', function(){
-  state.notif = $(this).is(':checked'); localStorage.setItem('notif', JSON.stringify(state.notif));
-});
-$(document).on('click','[data-action="verify-nik"]', ()=>{
-  setTimeout(()=>{ state.user.nikVerified = true; save(); alert('NIK terverifikasi (mock)'); showSection('akun'); }, 400);
-});
-$(document).on('click','[data-action="logout"]', ()=>{
-  if(confirm('Keluar dan hapus data lokal?')){
-    localStorage.clear(); state.onboarded=false; state.user={}; state.notif=false;
-    showSection('onb-welcome');
-  }
-});
-$(document).on('click','[data-action="order"]', ()=> alert('Order dimulai (mock)...'));
-$(document).on('click','[data-action="booking"]', ()=> alert('Booking jadwal (mock)...'));
-$(document).on('click','[data-action="homecare"]', ()=> alert('Ajukan Home Care (mock)...'));
-$(document).on('click','[data-action="lihat-hasil"]', ()=> alert('Menampilkan hasil (mock)...'));
-
-/* ======== UTIL ======== */
-function genPid(){ return 'PX' + Date.now().toString().slice(-6); }
-function calcAge(dob){
-  try{ const d=new Date(dob), n=new Date(); let y=n.getFullYear()-d.getFullYear(); let m=n.getMonth()-d.getMonth(); if(n.getDate()<d.getDate()) m--; if(m<0){y--; m+=12} return `${y} Tahun, ${m} bulan`; }catch(_){ return '' }
-}
-
-/* ======== PWA (SW + update flow) ======== */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    const reg = await navigator.serviceWorker.register('./sw.js');
-
-    function onNewServiceWorker(reg, callback) {
-      if (!reg) return;
-      if (reg.waiting) return callback();
-      function listenInstalling() {
-        if (reg.installing) {
-          reg.installing.addEventListener('statechange', function () {
-            if (this.state === 'installed' && reg.waiting) callback();
-          });
-        }
-      }
-      if (reg.installing) listenInstalling();
-      else reg.addEventListener('updatefound', listenInstalling);
-    }
-
-    // Otomatis aktifkan SW baru (hard reset cache) saat tersedia
-    onNewServiceWorker(reg, () => {
-      reg.waiting.postMessage('SKIP_WAITING');
-    });
-  });
-
-  // Reload sekali ketika SW baru menguasai halaman
-  let refreshed = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (refreshed) return;
-    refreshed = true;
-    location.reload();
-  });
-}
+				<div class="d-grid gap-2">
+					<button class="btn btn-success" data-go="home">Masuk ke Beranda</button>
+				</div>
+			</div>
+		</section>
 
 
 
-let deferredPrompt; const installBtn = $('#installBtn');
-window.addEventListener('beforeinstallprompt', (e)=>{
-  e.preventDefault(); deferredPrompt = e; installBtn.removeClass('d-none');
-});
-installBtn.on('click', async ()=>{
-  if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice;
-  deferredPrompt = null; installBtn.addClass('d-none');
-});
-</script>
+		<!-- Home -->
+		<section class="page page-push-bottom hidden" id="home">
+			<!-- Promo Card: SILVER -->
+			<div class="card card-soft mb-2">
+				<div class="card-header bg-transparent border-bottom py-2">
+					<span class="badge text-success">PROMOCARE</span>
+				</div>
+				<div class="card-body">
+					<h6 class="card-title mb-2">MEDICAL CHECK UP SILVER</h6>
+					<ul class="card-text small text-muted mb-1 list-unstyled">
+						<li>Profil darah, gula, kolesterol, Asam Urat</li>
+					</ul>
+				</div>
+				<div class="card-footer bg-transparent border-0 pt-2">
+					<div class="d-flex align-items-center gap-2">
+						<span class="text-decoration-line-through small text-muted">Rp 980.000</span>
+						<h5 style="color:#0E6E66" class="fw-bold">Rp 393.000</h5>
+						<button class="btn btn-success btn-sm ms-auto py-1 px-4" data-action="order">Ambil</button>
+					</div>
+				</div>
+			</div>
+			<!-- Promo Card: PLATINUM -->
+			<div class="card card-soft mb-2">
+				<div class="card-header bg-transparent border-bottom py-2">
+					<span class="badge text-success">PROMOCARE</span>
+				</div>
+				<div class="card-body">
+					<h6 class="card-title mb-2">MEDICAL CHECK UP PLATINUM</h6>
+					<ul class="card-text small text-muted mb-1 list-unstyled">
+						<li>Profil darah, gula, kolesterol, fungsi organ</li>
+					</ul>
+				</div>
+				<div class="card-footer bg-transparent border-0 pt-2">
+					<div class="d-flex align-items-center gap-2">
+						<span class="text-decoration-line-through small text-muted">Rp 1.290.000</span>
+						<h5 style="color:#0E6E66" class="fw-bold">Rp 460.000</h5>
+						<button class="btn btn-success btn-sm ms-auto py-1 px-4" data-action="order">Ambil</button>
+					</div>
+				</div>
+			</div>
+			<div class="text-end small text-muted mt-1">... lainnya »</div>
+			<!-- Aksi Sehat -->
+			<section class="mb-3">
+				<h6 class="fw-bold mb-2">Aksi Sehat</h6>
+				<div class="row g-2">
+					<div class="col-3"><a class="btn btn-light w-100 py-3 shadow-box" data-go="layanan">🗓️<br /><span
+								class="small">Jadwal</span></a></div>
+					<div class="col-3"><a class="btn btn-light w-100 py-3 shadow-box" data-go="riwayat">📄<br /><span
+								class="small">Hasil</span></a></div>
+					<div class="col-3"><a class="btn btn-light w-100 py-3 shadow-box" data-go="layanan">🏥<br /><span
+								class="small">Home Care</span></a></div>
+					<div class="col-3"><a class="btn btn-light w-100 py-3 shadow-box" data-go="layanan">ℹ️<br /><span
+								class="small">Program</span></a></div>
+				</div>
+			</section>
+			<!-- Tips Kesehatan -->
+			<section>
+				<h6 class="fw-bold mb-2">Tips Kesehatan</h6>
+				<div class="card card-soft p-3">
+					<h6 style="font-weight: 600;">DIET TEPAT USIA EMAS</h6>
+					<div class="small text-muted">Program asupan usia matang.</div>
+				</div>
+			</section>
+		</section>
+		<!-- RIWAYAT -->
+		<section class="page page-push-bottom hidden" id="riwayat">
+			<h6 class="fw-bold mb-2">Riwayat Pemeriksaan</h6>
+			<div class="card card-soft p-3 mb-2">
+				<div class="fw-semibold">MCU Silver - 02 Agu 2025</div>
+				<div class="small text-muted mb-2">Ringkasan: Normal, cek ulang 6 bulan.</div>
+				<button class="btn btn-success btn-sm" data-action="lihat-hasil">Lihat Hasil</button>
+			</div>
+			<div class="small text-muted">Belum ada data lain.</div>
+		</section>
+		<!-- LAYANAN -->
+		<section class="page page-push-bottom hidden" id="layanan">
+			<h6 class="fw-bold mb-2">Layanan</h6>
+			<div class="card card-soft p-3 mb-2">
+				<div class="fw-semibold">Booking Jadwal</div>
+				<div class="small text-muted mb-2">Pilih cabang &amp; tanggal.</div>
+				<button class="btn btn-success btn-sm" data-action="booking">Mulai</button>
+			</div>
+			<div class="card card-soft p-3">
+				<div class="fw-semibold">Home Care</div>
+				<div class="small text-muted mb-2">Kunjungan petugas ke lokasi Anda.</div>
+				<button class="btn btn-success btn-sm" data-action="homecare">Ajukan</button>
+			</div>
+		</section>
+		<!-- AKUN -->
+		<section class="page page-push-bottom hidden" id="akun">
+			<h6 class="fw-bold mb-2">Akun</h6>
+			<div class="card card-soft p-3 mb-2">
+				<div class="d-flex align-items-center gap-2">
+					<div class="rounded-circle bg-success text-white d-grid"
+						style="width:42px;height:42px;place-items:center">👤</div>
+					<div>
+						<div class="fw-semibold" id="akunName">Sabahat</div>
+						<div class="small text-muted" id="akunMeta"></div>
+					</div>
+				</div>
+			</div>
+			<div class="card card-soft p-3 mb-2">
+				<div class="fw-semibold mb-1">Pasien</div>
+				<div class="small text-muted">ID Pasien: <span id="akunPid">-</span></div>
+				<div class="small">Status NIK: <strong id="akunNikStatus">Belum Verifikasi</strong></div>
+				<button class="btn btn-outline-success btn-sm mt-2" data-action="verify-nik">Verify NIK (mock)</button>
+			</div>
+			<div class="form-check mb-3">
+				<input class="form-check-input" id="notif" type="checkbox" />
+				<label class="form-check-label small" for="notif">Aktifkan notifikasi</label>
+			</div>
+			<div class="d-flex gap-2">
+				<button class="btn btn-outline-success btn-sm" data-go="onb-details">Ubah Profil</button>
+				<button class="btn btn-danger btn-sm ms-auto" data-action="logout">Logout</button>
+			</div>
+		</section>
+		<!-- ===================== /PAGES ===================== -->
+		<!-- Bottom Nav -->
+		<nav class="navbar navbar-dark bg-success nav-bottom d-none" id="bottomNav">
+			<div class="container-fluid justify-content-around">
+				<a class="nav-link text-white small text-center" data-go="home">🏠<br />Home</a>
+				<a class="nav-link text-white small text-center" data-go="riwayat">🗂️<br />Riwayat</a>
+				<a class="nav-link text-white small text-center" data-go="layanan">🧪<br />Layanan</a>
+				<a class="nav-link text-white small text-center" data-go="akun">👤<br />Akun</a>
+			</div>
+		</nav>
+	</div>
 
+	</div>
 </body>
+
 </html>
