@@ -16,6 +16,34 @@
 <style>
   :root{--bg:#e6f3ee;--brand:#0e5e55}
   body{background:var(--bg);color:#0e2a26}
+
+  /* ========== Splash ========== */
+  #onb-splash{
+  position:fixed; inset:0; z-index:9999;
+  display:grid; place-items:center; text-align:center;
+  color:#fff; padding:24px;
+  /* Gradient hijau + glow logo */
+  background:
+    radial-gradient(240px 160px at 50% 32%, rgba(255,255,255,.18), rgba(255,255,255,0) 60%),
+    radial-gradient(1200px 800px at 10% 10%, rgba(255,255,255,.08), rgba(255,255,255,0) 50%),
+    linear-gradient(155deg, #25d0a6 0%, #0fb18c 38%, #0e5e55 100%);
+  }
+  #onb-splash .splash-mark{
+  width:82px; height:82px; border-radius:20px;
+  display:inline-grid; place-items:center;
+  background:rgba(255,255,255,.14);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+  }
+  #onb-splash .splash-mark img{ width:56px; height:56px; object-fit:contain; }
+  #onb-splash .brand-title{ font-weight:700; letter-spacing:.3px; }
+  #onb-splash .brand-sub{ opacity:.9 }
+  #onb-splash .spinner-border{ margin-top:18px }
+
+  .splash-hide{ animation:splashOut .36s ease forwards }
+  @keyframes splashOut{ to{ opacity:0; visibility:hidden } }
+
+
   .app{max-width:420px;margin:auto;min-height:100dvh;display:flex;flex-direction:column}
   .card-soft{background:#cfe7df;border:none;border-radius:14px}
   .hidden{display:none !important}
@@ -23,6 +51,90 @@
   section.page{padding:12px 16px}
   .step-dot{width:8px;height:8px;border-radius:50%;background:#bcd7cf}
   .step-dot.active{background:var(--brand)}
+
+  /* === UI ENHANCEMENT: type scale, spacing, sizing (mobile) === */
+:root{
+  /* palette helpers (keep your existing colors) */
+  --ink-900:#0B1220; --ink-600:#475569;
+  --divider:#E2E8F0;
+
+  /* radii & spacing */
+  --radius-lg:16px; --radius-md:12px;
+  --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
+
+  /* type scale (base 16px) */
+  --fs-title:1.75rem;     /* 28px – section/page hero */
+  --fs-subtitle:1.0625rem;/* 17px – subheading */
+  --fs-body:0.9375rem;    /* 15px – body default */
+  --fs-caption:0.8125rem; /* 13px – small */
+  --fs-price:1.5rem;      /* 24px – large price */
+
+  /* buttons */
+  --btn-h:56px; --btn-r:14px;
+}
+
+/* Canvas & sections */
+body{ font-size:var(--fs-body); }
+section.page{ padding:16px 20px !important; }
+section.page > section{ margin-bottom:var(--space-5); }
+
+/* Header = white, compact, sticky */
+#appHeader{
+  position:sticky; top:0; z-index:20;
+  background:#fff; border-bottom:1px solid var(--divider);
+  padding:16px 20px !important;
+}
+#appHeader .small{ font-size:var(--fs-caption); }
+#appHeader .d-flex>div .small:last-child{ color:var(--ink-600); font-size:var(--fs-body); }
+
+/* Cards */
+.card-soft{
+  background:#E6F4F2; border:none;
+  border-radius:var(--radius-lg) !important;
+}
+.card-soft .fw-semibold{ font-size:1.0625rem; letter-spacing:.1px; }
+.card-soft .small{ font-size:var(--fs-caption); }
+
+/* Badges / chips */
+.badge{ border-radius:999px; padding:.4rem .6rem; font-weight:600; }
+.badge.text-bg-light.text-success{ background:#FFFBEB; color:#F59E0B; } /* “Promo” amber */
+
+/* Buttons (keep Bootstrap classes, just enhance) */
+.btn{ border-radius:var(--btn-r); font-weight:700; letter-spacing:.2px; }
+.btn.btn-success{
+  height:var(--btn-h); padding:0 18px; border:none;
+  background:linear-gradient(90deg,#0F766E,#14B8A6);
+  box-shadow:0 4px 14px rgba(15,118,110,.18);
+}
+.btn.btn-success:active{ transform:translateY(1px); }
+.btn.btn-outline-success{
+  height:var(--btn-h); padding:0 18px;
+  border-width:1.5px; border-color:#0F766E; color:#0F766E; background:#F6FFFD;
+}
+.btn.btn-sm{ height:40px; border-radius:12px; padding:0 12px; }
+
+/* Section headings */
+#home h6.fw-bold{ font-size:1.125rem; letter-spacing:.1px; margin-bottom:.75rem; }
+
+/* Price presentation */
+#home strong{ font-size:var(--fs-price); font-weight:800; color:var(--ink-900); line-height:1.2; }
+#home .text-decoration-line-through{ color:var(--ink-600); }
+
+/* Quick actions (keep 1 tone background; rounded & roomy) */
+#home .row.g-2 > [class^="col"] .btn{
+  background:#F0F9FF; border:1px solid #D6E9F8; color:#0E6E66;
+  border-radius:var(--radius-lg); padding:14px 8px;
+}
+#home .row.g-2 > [class^="col"] .btn .small{ font-size:var(--fs-caption); }
+
+/* Bottom navigation: white like the mock, teal icons */
+#bottomNav{
+  background:#fff !important; border-top:1px solid var(--divider);
+  box-shadow:0 -6px 20px rgba(19,41,33,.04);
+}
+#bottomNav .nav-link{ color:#0E6E66 !important; opacity:.82; }
+#bottomNav .nav-link.active{ opacity:1; }
+
 </style>
 </head>
 <body>
@@ -41,6 +153,20 @@
   </header>
 
   <!-- ===================== PAGES (SECTIONS) ===================== -->
+
+<!-- Onboarding: Splash -->
+<section id="onb-splash" class="page">
+  <div>
+    <div class="splash-mark mx-auto mb-3">
+      <!-- Ganti src di bawah dengan logo Diagnos kamu jika ada -->
+      <img src="./icons/icon-192.png" alt="Diagnos">
+    </div>
+    <div class="brand-title">Diagnos</div>
+    <div class="small brand-sub">Clinical Laboratory</div>
+    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+  </div>
+</section>
+
 
   <!-- Onboarding: Welcome -->
   <section id="onb-welcome" class="page">
@@ -310,8 +436,22 @@ function showSection(id){
   $('#akunPid').text(state.user?.patientId || '-');
   $('#akunNikStatus').text(state.user?.nikVerified ? 'Terverifikasi' : 'Belum Verifikasi');
 }
-const startPage = state.onboarded ? 'home' : 'onb-welcome';
+
+const startPage = state.onboarded ? 'home' : 'onb-splash';
 showSection(startPage);
+
+// Auto-transition dari Splash -> Welcome
+if (!state.onboarded) {
+  setTimeout(() => {
+    // kalau user belum pindah manual, pakai router (hash) biar masuk history
+    if (!location.hash || location.hash === '#onb-splash') {
+      window.location.hash = 'onb-welcome';
+    }
+    // animasi fade-out opsional
+    $('#onb-splash').addClass('splash-hide');
+  }, 1200); // durasi tampil splash (ms)
+}
+
 
 /* ======== NAV HANDLERS (versi dengan history) ======== */
 $(document).on('click','[data-go]', function(){
