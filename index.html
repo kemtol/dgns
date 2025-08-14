@@ -95,48 +95,65 @@
     <div class="small text-muted mb-3">
       Data: NIK, Nama, Gender & Tgl Lahir, Email & Phone, Alamat. <em>NIK belum diverifikasi di tahap ini.</em>
     </div>
-    <form id="formOnb" class="card card-soft p-3">
+
+    <!-- Nonaktifkan validasi native browser -->
+    <form id="formOnb" class="card card-soft p-3" novalidate>
       <div class="mb-2">
         <label class="form-label small">NIK</label>
-        <input required maxlength="16" pattern="\\d{16}" class="form-control" name="nik" placeholder="16 digit">
+        <!-- required, maxlength, pattern dihapus -->
+        <input class="form-control" name="nik" placeholder="16 digit">
       </div>
+
       <div class="mb-2">
         <label class="form-label small">Nama</label>
-        <input required class="form-control" name="name">
+        <!-- required dihapus -->
+        <input class="form-control" name="name">
       </div>
+
       <div class="row g-2">
         <div class="col-6">
           <label class="form-label small">Gender</label>
-          <select class="form-select" name="gender"><option value="M">Pria</option><option value="F">Wanita</option></select>
+          <select class="form-select" name="gender">
+            <option value="M">Pria</option>
+            <option value="F">Wanita</option>
+          </select>
         </div>
         <div class="col-6">
           <label class="form-label small">Tanggal Lahir</label>
+          <!-- tetap type="date" untuk date picker; tidak divalidasi karena novalidate -->
           <input type="date" class="form-control" name="dob">
         </div>
       </div>
+
       <div class="row g-2 mt-1">
         <div class="col-6">
           <label class="form-label small">Email</label>
+          <!-- tetap type="email" untuk keyboard/auto-fill; tidak divalidasi karena novalidate -->
           <input type="email" class="form-control" name="email">
         </div>
         <div class="col-6">
           <label class="form-label small">Phone</label>
+          <!-- tetap type="tel" untuk keyboard numerik; tidak divalidasi karena novalidate -->
           <input type="tel" class="form-control" name="phone" placeholder="08xxxxxxxxxx">
         </div>
       </div>
+
       <div class="mt-2">
         <label class="form-label small">Alamat</label>
         <textarea rows="2" class="form-control" name="address"></textarea>
       </div>
+
       <div class="d-flex gap-2 mt-3">
         <button class="btn btn-outline-success" data-go="onb-perms" type="button">Kembali</button>
         <button class="btn btn-success ms-auto" type="submit">Daftarkan</button>
       </div>
     </form>
+
     <div class="d-flex justify-content-center gap-2 my-3">
       <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot active"></div>
     </div>
   </section>
+
 
   <!-- Onboarding: Success -->
   <section id="onb-success" class="page hidden text-center">
